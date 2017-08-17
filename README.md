@@ -9,22 +9,24 @@ implementation for data repositories defined in [Atlassian Connect Play](atlassi
 
 ## Quick start
 
-atlassian-connect-play-slick is published to Maven Central, so you can just add the following to your build:
+atlassian-connect-play-slick is published to Maven Central for Scala 2.12 and 
+Play 2.6.x, so you can just add the following to your build:
 
-    libraryDependencies += "io.toolsplus" %% "atlassian-connect-play-slick" % 0.0.1
+    libraryDependencies += "io.toolsplus" %% "atlassian-connect-play-slick" % 0.1.0
 
 ### JDBC driver dependency
 The Play Slick module does not bundle any JDBC driver. Hence, you will need to 
 explicitly add the JDBC driver(s) you want to use in your application. 
 
-For instance, if you would like to use an in-memory database such as H2, you will have to add a dependency to it:
+For instance, if you would like to use an in-memory database such as H2, you will 
+have to add a dependency to it:
 
     libraryDependencies += "com.h2database" % "h2" % "${H2_VERSION}"
 
-After that follow the [Play Slick](play-slick-docs) documentation on how to add the Slick 
-database configuration to your `application.conf`. E.g.
+After that follow the [Play Slick](play-slick-docs) documentation on how to add 
+the Slick database configuration to your `application.conf`. E.g.
 
-    slick.dbs.default.driver="slick.driver.H2Driver$"
+    slick.dbs.default.profile"="slick.jdbc.H2Profile$
     slick.dbs.default.db.driver="org.h2.Driver"
     slick.dbs.default.db.url="jdbc:h2:mem:play"
 

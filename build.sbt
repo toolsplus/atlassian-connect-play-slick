@@ -1,6 +1,6 @@
 val commonSettings = Seq(
   organization := "io.toolsplus",
-  scalaVersion := "2.11.8"
+  scalaVersion := "2.12.3"
 )
 
 lazy val publishSettings = Seq(
