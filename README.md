@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/toolsplus/atlassian-connect-play-slick.svg?branch=master)](https://travis-ci.org/toolsplus/atlassian-connect-play-slick)
 [![codecov](https://codecov.io/gh/toolsplus/atlassian-connect-play-slick/branch/master/graph/badge.svg)](https://codecov.io/gh/toolsplus/atlassian-connect-play-slick)
-[![Maven Central](https://img.shields.io/maven-central/v/io.toolsplus/atlassian-connect-play-slick_2.11.svg)](https://maven-badges.herokuapp.com/maven-central/io.toolsplus/atlassian-connect-play-slick_2.11)
+[![Maven Central](https://img.shields.io/maven-central/v/io.toolsplus/atlassian-connect-play-slick_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/io.toolsplus/atlassian-connect-play-slick_2.11)
 
 Atlassian Connect Play Slick is a Play module providing Slick 
 implementation for data repositories defined in [Atlassian Connect Play](atlassian-connect-play).
