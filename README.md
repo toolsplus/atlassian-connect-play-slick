@@ -12,7 +12,7 @@ implementation for data repositories defined in [Atlassian Connect Play](atlassi
 atlassian-connect-play-slick is published to Maven Central for Scala 2.12 and 
 Play 2.6.x, so you can just add the following to your build:
 
-    libraryDependencies += "io.toolsplus" %% "atlassian-connect-play-slick" % 0.1.0
+    libraryDependencies += "io.toolsplus" %% "atlassian-connect-play-slick" % 0.1.1
 
 ### JDBC driver dependency
 The Play Slick module does not bundle any JDBC driver. Hence, you will need to 
