@@ -39,8 +39,8 @@ lazy val publishSettings = Seq(
 )
 
 lazy val noPublishSettings = Seq(
-  publish := (),
-  publishLocal := (),
+  publish := {},
+  publishLocal := {},
   publishArtifact := false,
   publishTo := Some(
     Resolver.file("Unused transient repository", file("target/dummyrepo")))
