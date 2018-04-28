@@ -1,8 +1,10 @@
 package io.toolsplus.atlassian.connect.play.slick
 
 import javax.inject.{Inject, Singleton}
-
-import io.toolsplus.atlassian.connect.play.api.models.AtlassianHost
+import io.toolsplus.atlassian.connect.play.api.models.{
+  AtlassianHost,
+  StandardAtlassianHost
+}
 import io.toolsplus.atlassian.connect.play.api.models.Predefined.ClientKey
 import io.toolsplus.atlassian.connect.play.api.repositories.AtlassianHostRepository
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
@@ -84,7 +86,50 @@ private[slick] trait AtlassianHostTable {
        productType,
        description,
        serviceEntitlementNumber,
-       installed) <> ((AtlassianHost.apply _).tupled, AtlassianHost.unapply)
+       installed) <> (toHost.tupled, fromHost)
+
+    private def toHost: (ClientKey,
+                         String,
+                         String,
+                         Option[String],
+                         String,
+                         String,
+                         String,
+                         String,
+                         String,
+                         String,
+                         Option[String],
+                         Boolean) => AtlassianHost = StandardAtlassianHost.apply
+  }
+
+  private def fromHost: AtlassianHost => Option[
+    (ClientKey,
+     String,
+     String,
+     Option[String],
+     String,
+     String,
+     String,
+     String,
+     String,
+     String,
+     Option[String],
+     Boolean)] = { host: AtlassianHost =>
+    StandardAtlassianHost.unapply(
+      StandardAtlassianHost(
+        host.clientKey,
+        host.key,
+        host.publicKey,
+        host.oauthClientId,
+        host.sharedSecret,
+        host.serverVersion,
+        host.pluginsVersion,
+        host.baseUrl,
+        host.productType,
+        host.description,
+        host.serviceEntitlementNumber,
+        host.installed
+      ))
   }
 
 }
