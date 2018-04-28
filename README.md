@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/toolsplus/atlassian-connect-play-slick.svg?branch=master)](https://travis-ci.org/toolsplus/atlassian-connect-play-slick)
 [![codecov](https://codecov.io/gh/toolsplus/atlassian-connect-play-slick/branch/master/graph/badge.svg)](https://codecov.io/gh/toolsplus/atlassian-connect-play-slick)
-[![Maven Central](https://img.shields.io/maven-central/v/io.toolsplus/atlassian-connect-play-slick_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/io.toolsplus/atlassian-connect-play-slick_2.11)
+[![Maven Central](https://img.shields.io/maven-central/v/io.toolsplus/atlassian-connect-play-slick_2.12.svg)](https://maven-badges.herokuapp.com/maven-central/io.toolsplus/atlassian-connect-play-slick_2.12)
 
 Atlassian Connect Play Slick is a Play module providing Slick 
 implementation for data repositories defined in [Atlassian Connect Play](atlassian-connect-play).
@@ -12,7 +12,7 @@ implementation for data repositories defined in [Atlassian Connect Play](atlassi
 atlassian-connect-play-slick is published to Maven Central for Scala 2.12 and 
 Play 2.6.x, so you can just add the following to your build:
 
-    libraryDependencies += "io.toolsplus" %% "atlassian-connect-play-slick" % 0.1.1
+    libraryDependencies += "io.toolsplus" %% "atlassian-connect-play-slick" % 0.1.2
 
 ### JDBC driver dependency
 The Play Slick module does not bundle any JDBC driver. Hence, you will need to 

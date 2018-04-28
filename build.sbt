@@ -2,7 +2,7 @@ import ReleaseTransformations._
 
 val commonSettings = Seq(
   organization := "io.toolsplus",
-  scalaVersion := "2.12.4"
+  scalaVersion := "2.12.6"
 )
 
 lazy val publishSettings = Seq(
