@@ -1,10 +1,10 @@
 package io.toolsplus.atlassian.connect.play.slick.fixtures
 
-import io.toolsplus.atlassian.connect.play.api.models.StandardAtlassianHost
+import io.toolsplus.atlassian.connect.play.api.models.DefaultAtlassianHost
 import io.toolsplus.atlassian.connect.play.slick.generators.AtlassianHostGen
 
 trait AtlassianHostFixture extends AtlassianHostGen {
-  val defaultHost = StandardAtlassianHost(
+  val defaultHost = DefaultAtlassianHost(
     "a890cfe7-3518-3920-b0b5-6fa412a7f3d4",
     "io.toolsplus.atlassian.connect.play.scala.seed",
     "MIGfMA0GCSqGDc10pQ4Xo+l/BaWhmiHXDDQ/tOjgfqaDxiXuIi/Jhk4D73aHbL9FwIDAQAB",
