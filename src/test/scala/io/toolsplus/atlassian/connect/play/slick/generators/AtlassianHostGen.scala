@@ -1,7 +1,7 @@
 package io.toolsplus.atlassian.connect.play.slick.generators
 
 import io.toolsplus.atlassian.connect.play.api.models.Predefined.ClientKey
-import io.toolsplus.atlassian.connect.play.api.models.StandardAtlassianHost
+import io.toolsplus.atlassian.connect.play.api.models.DefaultAtlassianHost
 import org.scalacheck.Gen
 import org.scalacheck.Gen.{alphaStr, numStr, option, _}
 
@@ -14,7 +14,7 @@ trait AtlassianHostGen {
 
   def productTypeGen: Gen[String] = oneOf("jira", "confluence")
 
-  def atlassianHostGen: Gen[StandardAtlassianHost] =
+  def atlassianHostGen: Gen[DefaultAtlassianHost] =
     for {
       key <- alphaStr
       clientKey <- clientKeyGen
@@ -29,7 +29,7 @@ trait AtlassianHostGen {
       serviceEntitlementNumber <- option(numStr)
       installed <- oneOf(true, false)
     } yield
-      StandardAtlassianHost(clientKey,
+      DefaultAtlassianHost(clientKey,
                             key,
                             publicKey,
                             oauthClientId,

@@ -12,7 +12,7 @@ object Dependencies {
 }
 
 object Version {
-  val atlassianConnectPlay = "0.1.6"
+  val atlassianConnectPlay = "0.1.7"
   val playSlick = "3.0.3"
   val scalaTestPlusPlay = "3.1.2"
   val scalaCheck = "1.13.5"

@@ -3,7 +3,7 @@ package io.toolsplus.atlassian.connect.play.slick
 import javax.inject.{Inject, Singleton}
 import io.toolsplus.atlassian.connect.play.api.models.{
   AtlassianHost,
-  StandardAtlassianHost
+  DefaultAtlassianHost
 }
 import io.toolsplus.atlassian.connect.play.api.models.Predefined.ClientKey
 import io.toolsplus.atlassian.connect.play.api.repositories.AtlassianHostRepository
@@ -99,7 +99,7 @@ private[slick] trait AtlassianHostTable {
                          String,
                          String,
                          Option[String],
-                         Boolean) => AtlassianHost = StandardAtlassianHost.apply
+                         Boolean) => AtlassianHost = DefaultAtlassianHost.apply
   }
 
   private def fromHost: AtlassianHost => Option[
@@ -115,8 +115,8 @@ private[slick] trait AtlassianHostTable {
      String,
      Option[String],
      Boolean)] = { host: AtlassianHost =>
-    StandardAtlassianHost.unapply(
-      StandardAtlassianHost(
+    DefaultAtlassianHost.unapply(
+      DefaultAtlassianHost(
         host.clientKey,
         host.key,
         host.publicKey,
