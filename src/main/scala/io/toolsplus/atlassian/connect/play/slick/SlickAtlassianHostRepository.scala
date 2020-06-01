@@ -64,6 +64,8 @@ private[slick] trait AtlassianHostTable {
     val serverVersion = column[String]("server_version", NotNull)
     val pluginsVersion = column[String]("plugins_version", NotNull)
     val baseUrl = column[String]("base_url", NotNull, SqlType("VARCHAR(512)"))
+    val displayUrl = column[Option[String]]("display_url", SqlType("VARCHAR(512)"))
+    val displayUrlServicedeskHelpCenter = column[Option[String]]("display_url_servicedesk_help_center", SqlType("VARCHAR(512)"))
     val productType = column[String]("product_type", NotNull)
     val description = column[String]("description", NotNull)
     val serviceEntitlementNumber =
