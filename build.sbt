@@ -2,7 +2,7 @@ import ReleaseTransformations._
 
 val commonSettings = Seq(
   organization := "io.toolsplus",
-  scalaVersion := "2.12.6"
+  scalaVersion := "2.13.2"
 )
 
 lazy val publishSettings = Seq(
@@ -10,7 +10,7 @@ lazy val publishSettings = Seq(
   homepage := Some(
     url("https://github.com/toolsplus/atlassian-connect-play-slick")),
   licenses := Seq(
-    "Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    "Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
   publishMavenStyle := true,
   publishArtifact in Test := false,
   pomIncludeRepository := { _ =>
@@ -33,7 +33,7 @@ lazy val publishSettings = Seq(
   developers := List(
     Developer("tbinna",
               "Tobias Binna",
-              "tobias.binna@toolsplus.ch",
+              "tobias.binna@toolsplus.io",
               url("https://twitter.com/tbinna"))
   )
 )

@@ -1,14 +1,11 @@
 package io.toolsplus.atlassian.connect.play.slick
 
 import play.api.Configuration
+import scala.jdk.CollectionConverters._
 
 trait WithReferenceConfig {
-  val ref = Configuration.reference
+  val ref: Configuration = Configuration.reference
   def enabledModules(c: Configuration): List[String] = {
-    import scala.collection.JavaConverters._
-    ref.getStringList("play.modules.enabled") match {
-      case None => Nil
-      case Some(jlist) => jlist.asScala.toList
-    }
+    ref.underlying.getStringList("play.modules.enabled").asScala.toList
   }
 }
