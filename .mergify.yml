@@ -10,7 +10,7 @@ pull_request_rules:
   - name: Merge Scala Steward's PRs
     conditions:
       - author=toolsplus-scala-steward
-      - check-success=Continuous integration / build (push)
+      - check-success=Compile, test
     actions:
       merge:
         method: rebase
