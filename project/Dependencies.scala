@@ -16,7 +16,7 @@ object Version {
   val atlassianConnectPlay = "0.2.0"
   val playSlick = "5.0.0"
   val scalaTestPlusPlay = "5.1.0"
-  val scalaCheck = "1.14.3"
+  val scalaCheck = "1.15.2"
   val scalaTestPlusScalaCheck = "3.1.2.0"
   val h2 = "1.4.197"
 }
