@@ -15,7 +15,7 @@ CREATE TABLE atlassian_host (
 );
 CREATE UNIQUE INDEX uq_ac_host_client_key
   ON atlassian_host (client_key);
-CREATE UNIQUE INDEX uq_ac_host_base_url
+CREATE INDEX uq_ac_host_base_url
   ON atlassian_host (base_url);
 
 # --- !Downs

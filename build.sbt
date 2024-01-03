@@ -5,6 +5,13 @@ val commonSettings = Seq(
   scalaVersion := "2.13.2"
 )
 
+val integrationTestSettings = Defaults.itSettings ++ Seq(
+  IntegrationTest / fork := true,
+  IntegrationTest / testOptions += Tests.Argument(TestFrameworks.ScalaTest,
+    "-u",
+    "target/test-reports")
+)
+
 lazy val publishSettings = Seq(
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   homepage := Some(
@@ -72,5 +79,7 @@ lazy val `atlassian-connect-play-slick` = project
   .in(file("."))
   .settings(libraryDependencies ++= Dependencies.root)
   .settings(commonSettings: _*)
+  .settings(integrationTestSettings: _*)
   .settings(publishSettings)
   .settings(moduleSettings(project))
+  .configs(IntegrationTest)

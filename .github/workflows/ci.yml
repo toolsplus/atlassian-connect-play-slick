@@ -12,6 +12,6 @@ jobs:
           java-version: '11'
           cache: 'sbt'
       - name: Compile, test
-        run: sbt clean coverage test coverageReport
+        run: sbt clean coverage test IntegrationTest/test coverageReport
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
