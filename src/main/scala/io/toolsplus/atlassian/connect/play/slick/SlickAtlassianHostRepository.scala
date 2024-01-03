@@ -72,7 +72,7 @@ private[slick] trait AtlassianHostTable {
 
     val clientKeyIndex =
       index("uq_ac_host_client_key", clientKey, unique = true)
-    val baseUrlIndex = index("uq_ac_host_base_url", baseUrl, unique = true)
+    val baseUrlIndex = index("uq_ac_host_base_url", baseUrl)
 
     def * =
       (clientKey,
