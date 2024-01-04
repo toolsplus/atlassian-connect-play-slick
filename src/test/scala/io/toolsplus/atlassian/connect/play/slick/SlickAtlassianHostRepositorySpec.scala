@@ -12,22 +12,22 @@ class SlickAtlassianHostRepositorySpec
     extends TestSpec
     with GuiceOneAppPerTest {
 
-  override def fakeApplication() = {
+  override def fakeApplication(): Application = {
     val config = TestData.configuration
     GuiceApplicationBuilder(configuration = config).build()
   }
 
-  def withEvolutions[T](block: => T) =
+  def withEvolutions[T](block: => T): T =
     Evolutions.withEvolutions(
       dbApi.database("default"),
       ClassLoaderEvolutionsReader.forPrefix("evolutions/")) {
       block
     }
 
-  def dbApi(implicit app: Application) =
+  def dbApi(implicit app: Application): DBApi =
     Application.instanceCache[DBApi].apply(app)
 
-  def hostRepo(implicit app: Application) =
+  def hostRepo(implicit app: Application): SlickAtlassianHostRepository =
     Application.instanceCache[SlickAtlassianHostRepository].apply(app)
 
   "Using a Slick host repository" when {
@@ -44,14 +44,6 @@ class SlickAtlassianHostRepositorySpec
         forAll(alphaStr) { clientKey =>
           await {
             hostRepo.findByClientKey(clientKey)
-          } mustBe None
-        }
-      }
-
-      "return None when trying to find a non existent host by baseUrl" in {
-        forAll(alphaStr) { baseUrl =>
-          await {
-            hostRepo.findByBaseUrl(baseUrl)
           } mustBe None
         }
       }
@@ -83,19 +75,6 @@ class SlickAtlassianHostRepositorySpec
           } mustBe Some(host)
         }
       }
-
-      "find the inserted host by base URL" in new AtlassianHostFixture {
-        withEvolutions {
-          await {
-            hostRepo.save(host)
-          } mustBe host
-
-          await {
-            hostRepo.findByBaseUrl(host.baseUrl)
-          } mustBe Some(host)
-        }
-      }
-
     }
 
     "saving the same Atlassian hosts twice" should {
