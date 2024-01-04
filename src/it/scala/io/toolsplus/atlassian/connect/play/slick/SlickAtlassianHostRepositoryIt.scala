@@ -68,12 +68,6 @@ class SlickAtlassianHostRepositoryIt
         } mustBe None
       }
 
-      "return None when trying to find a non existent host by baseUrl" in {
-        await {
-          hostRepo.findByBaseUrl("fake-base-url")
-        } mustBe None
-      }
-
     }
 
     "saving a Atlassian hosts to the repository" should {
@@ -98,18 +92,6 @@ class SlickAtlassianHostRepositoryIt
 
           await {
             hostRepo.findByClientKey(host.clientKey)
-          } mustBe Some(host)
-        }
-      }
-
-      "find the inserted host by base URL" in new AtlassianHostFixture {
-        withEvolutions {
-          await {
-            hostRepo.save(host)
-          } mustBe host
-
-          await {
-            hostRepo.findByBaseUrl(host.baseUrl)
           } mustBe Some(host)
         }
       }

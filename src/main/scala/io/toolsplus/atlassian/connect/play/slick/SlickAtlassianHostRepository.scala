@@ -28,9 +28,6 @@ class SlickAtlassianHostRepository @Inject()(
   def findByClientKey(clientKey: ClientKey): Future[Option[AtlassianHost]] =
     db.run(hosts.filter(_.clientKey === clientKey).result.headOption)
 
-  def findByBaseUrl(baseUrl: String): Future[Option[AtlassianHost]] =
-    db.run(hosts.filter(_.baseUrl === baseUrl).result.headOption)
-
   /** Saves the given Atlassian host by inserting it if it does not exist or
     * updating an existing record if it's already present.
     *
@@ -57,17 +54,23 @@ private[slick] trait AtlassianHostTable {
       extends Table[AtlassianHost](tag, "atlassian_host") {
     val clientKey = column[ClientKey]("client_key", O.PrimaryKey)
     val key = column[String]("key", NotNull)
-    val publicKey =
-      column[String]("public_key", NotNull, SqlType("VARCHAR(512)"))
     val oauthClientId = column[Option[String]]("oauth_client_id")
     val sharedSecret = column[String]("shared_secret", NotNull)
-    val serverVersion = column[String]("server_version", NotNull)
-    val pluginsVersion = column[String]("plugins_version", NotNull)
     val baseUrl = column[String]("base_url", NotNull, SqlType("VARCHAR(512)"))
+    val displayUrl =
+      column[String]("display_url", NotNull, SqlType("VARCHAR(512)"))
+    val displayUrlServicedeskHelpCenter = column[String](
+      "display_url_servicedesk_help_center",
+      NotNull,
+      SqlType("VARCHAR(512)"))
     val productType = column[String]("product_type", NotNull)
     val description = column[String]("description", NotNull)
     val serviceEntitlementNumber =
       column[Option[String]]("service_entitlement_number")
+    val entitlementId =
+      column[Option[String]]("entitlement_id")
+    val entitlementNumber =
+      column[Option[String]]("entitlement_number")
     val installed = column[Boolean]("installed", NotNull)
 
     val clientKeyIndex =
@@ -77,19 +80,19 @@ private[slick] trait AtlassianHostTable {
     def * =
       (clientKey,
        key,
-       publicKey,
        oauthClientId,
        sharedSecret,
-       serverVersion,
-       pluginsVersion,
        baseUrl,
+       displayUrl,
+       displayUrlServicedeskHelpCenter,
        productType,
        description,
        serviceEntitlementNumber,
+       entitlementId,
+       entitlementNumber,
        installed) <> (toHost.tupled, fromHost)
 
     private def toHost: (ClientKey,
-                         String,
                          String,
                          Option[String],
                          String,
@@ -98,6 +101,8 @@ private[slick] trait AtlassianHostTable {
                          String,
                          String,
                          String,
+                         Option[String],
+                         Option[String],
                          Option[String],
                          Boolean) => AtlassianHost = DefaultAtlassianHost.apply
   }
@@ -105,7 +110,6 @@ private[slick] trait AtlassianHostTable {
   private def fromHost: AtlassianHost => Option[
     (ClientKey,
      String,
-     String,
      Option[String],
      String,
      String,
@@ -113,21 +117,24 @@ private[slick] trait AtlassianHostTable {
      String,
      String,
      String,
+     Option[String],
+     Option[String],
      Option[String],
      Boolean)] = { host: AtlassianHost =>
     DefaultAtlassianHost.unapply(
       DefaultAtlassianHost(
         host.clientKey,
         host.key,
-        host.publicKey,
         host.oauthClientId,
         host.sharedSecret,
-        host.serverVersion,
-        host.pluginsVersion,
         host.baseUrl,
+        host.displayUrl,
+        host.displayUrlServicedeskHelpCenter,
         host.productType,
         host.description,
         host.serviceEntitlementNumber,
+        host.entitlementId,
+        host.entitlementNumber,
         host.installed
       ))
   }
