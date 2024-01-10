@@ -5,6 +5,7 @@ CREATE TABLE atlassian_host
     key                                 VARCHAR             NOT NULL,
     oauth_client_id                     VARCHAR,
     shared_secret                       VARCHAR             NOT NULL,
+    cloud_id                            VARCHAR,
     base_url                            VARCHAR             NOT NULL,
     display_url                         VARCHAR             NOT NULL,
     display_url_servicedesk_help_center VARCHAR             NOT NULL,

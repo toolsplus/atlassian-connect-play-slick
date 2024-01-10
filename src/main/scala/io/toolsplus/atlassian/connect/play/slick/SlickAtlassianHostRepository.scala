@@ -56,6 +56,7 @@ private[slick] trait AtlassianHostTable {
     val key = column[String]("key", NotNull)
     val oauthClientId = column[Option[String]]("oauth_client_id")
     val sharedSecret = column[String]("shared_secret", NotNull)
+    val cloudId = column[String]("cloud_id", SqlType("VARCHAR(255)"))
     val baseUrl = column[String]("base_url", NotNull, SqlType("VARCHAR(512)"))
     val displayUrl =
       column[String]("display_url", NotNull, SqlType("VARCHAR(512)"))
@@ -82,6 +83,7 @@ private[slick] trait AtlassianHostTable {
        key,
        oauthClientId,
        sharedSecret,
+       cloudId,
        baseUrl,
        displayUrl,
        displayUrlServicedeskHelpCenter,
@@ -96,6 +98,7 @@ private[slick] trait AtlassianHostTable {
                          String,
                          Option[String],
                          String,
+                         Option[String],
                          String,
                          String,
                          String,
@@ -112,6 +115,7 @@ private[slick] trait AtlassianHostTable {
      String,
      Option[String],
      String,
+     Option[String],
      String,
      String,
      String,
@@ -127,6 +131,7 @@ private[slick] trait AtlassianHostTable {
         host.key,
         host.oauthClientId,
         host.sharedSecret,
+        host.cloudId,
         host.baseUrl,
         host.displayUrl,
         host.displayUrlServicedeskHelpCenter,
