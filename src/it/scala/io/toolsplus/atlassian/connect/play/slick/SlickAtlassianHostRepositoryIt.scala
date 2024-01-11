@@ -2,6 +2,7 @@ package io.toolsplus.atlassian.connect.play.slick
 
 import com.dimafeng.testcontainers.PostgreSQLContainer
 import com.dimafeng.testcontainers.scalatest.TestContainerForAll
+import io.toolsplus.atlassian.connect.play.api.models.DefaultAtlassianHost
 import io.toolsplus.atlassian.connect.play.slick.fixtures.AtlassianHostFixture
 import org.scalatest.TestData
 import org.scalatest.concurrent.Eventually
@@ -97,14 +98,15 @@ class SlickAtlassianHostRepositoryIt
       }
 
       "find the inserted host by installation id" in new AtlassianHostFixture {
+        val connectOnForgeHost: DefaultAtlassianHost = if (host.installationId.isDefined) host else host.copy(installationId = Some("mock-installation-id"))
         withEvolutions {
           await {
-            hostRepo.save(host)
+            hostRepo.save(connectOnForgeHost)
           }
 
           await {
-            hostRepo.findByInstallationId(host.installationId.get)
-          } mustBe Some(host)
+            hostRepo.findByInstallationId(connectOnForgeHost.installationId.get)
+          } mustBe Some(connectOnForgeHost)
         }
       }
 
