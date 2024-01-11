@@ -4,6 +4,7 @@ CREATE TABLE atlassian_host
     client_key                          VARCHAR PRIMARY KEY NOT NULL,
     key                                 VARCHAR             NOT NULL,
     oauth_client_id                     VARCHAR,
+    installation_id                     VARCHAR,
     shared_secret                       VARCHAR             NOT NULL,
     base_url                            VARCHAR             NOT NULL,
     display_url                         VARCHAR             NOT NULL,
@@ -19,6 +20,8 @@ CREATE UNIQUE INDEX uq_ac_host_client_key
     ON atlassian_host (client_key);
 CREATE INDEX uq_ac_host_base_url
     ON atlassian_host (base_url);
+CREATE INDEX uq_ac_host_installation_id
+    ON atlassian_host (installation_id);
 
 # --- !Downs
 DROP TABLE atlassian_host;
