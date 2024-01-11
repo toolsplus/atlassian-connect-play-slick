@@ -16,6 +16,7 @@ trait AtlassianHostGen {
       key <- alphaStr
       clientKey <- clientKeyGen
       oauthClientId <- option(alphaNumStr)
+      installationId <- option(alphaNumStr)
       sharedSecret <- alphaNumStr.suchThat(s => s.length >= 32 && s.nonEmpty)
       baseUrl <- alphaStr
       productType <- productTypeGen
@@ -29,6 +30,7 @@ trait AtlassianHostGen {
         clientKey,
         key,
         oauthClientId,
+        installationId,
         sharedSecret,
         baseUrl,
         baseUrl,

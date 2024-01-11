@@ -96,6 +96,18 @@ class SlickAtlassianHostRepositoryIt
         }
       }
 
+      "find the inserted host by installation id" in new AtlassianHostFixture {
+        withEvolutions {
+          await {
+            hostRepo.save(host)
+          }
+
+          await {
+            hostRepo.findByInstallationId(host.installationId.get)
+          } mustBe Some(host)
+        }
+      }
+
     }
 
     "saving the same Atlassian hosts twice" should {

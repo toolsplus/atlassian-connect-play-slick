@@ -28,6 +28,9 @@ class SlickAtlassianHostRepository @Inject()(
   def findByClientKey(clientKey: ClientKey): Future[Option[AtlassianHost]] =
     db.run(hosts.filter(_.clientKey === clientKey).result.headOption)
 
+  def findByInstallationId(installationId: String): Future[Option[AtlassianHost]] =
+    db.run(hosts.filter(_.installationId === installationId).result.headOption)
+
   /** Saves the given Atlassian host by inserting it if it does not exist or
     * updating an existing record if it's already present.
     *
@@ -55,6 +58,7 @@ private[slick] trait AtlassianHostTable {
     val clientKey = column[ClientKey]("client_key", O.PrimaryKey)
     val key = column[String]("key", NotNull)
     val oauthClientId = column[Option[String]]("oauth_client_id")
+    val installationId = column[Option[String]]("installation_id")
     val sharedSecret = column[String]("shared_secret", NotNull)
     val baseUrl = column[String]("base_url", NotNull, SqlType("VARCHAR(512)"))
     val displayUrl =
@@ -81,6 +85,7 @@ private[slick] trait AtlassianHostTable {
       (clientKey,
        key,
        oauthClientId,
+       installationId,
        sharedSecret,
        baseUrl,
        displayUrl,
@@ -94,6 +99,7 @@ private[slick] trait AtlassianHostTable {
 
     private def toHost: (ClientKey,
                          String,
+                         Option[String],
                          Option[String],
                          String,
                          String,
@@ -111,6 +117,7 @@ private[slick] trait AtlassianHostTable {
     (ClientKey,
      String,
      Option[String],
+     Option[String],
      String,
      String,
      String,
@@ -126,6 +133,7 @@ private[slick] trait AtlassianHostTable {
         host.clientKey,
         host.key,
         host.oauthClientId,
+        host.installationId,
         host.sharedSecret,
         host.baseUrl,
         host.displayUrl,
