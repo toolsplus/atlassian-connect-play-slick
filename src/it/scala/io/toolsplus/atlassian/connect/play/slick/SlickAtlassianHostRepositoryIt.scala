@@ -1,54 +1,20 @@
 package io.toolsplus.atlassian.connect.play.slick
 
-import com.dimafeng.testcontainers.PostgreSQLContainer
-import com.dimafeng.testcontainers.scalatest.TestContainerForAll
 import io.toolsplus.atlassian.connect.play.api.models.DefaultAtlassianHost
 import io.toolsplus.atlassian.connect.play.slick.fixtures.AtlassianHostFixture
-import org.scalatest.TestData
+import org.scalatest.DoNotDiscover
 import org.scalatest.concurrent.Eventually
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import org.testcontainers.utility.DockerImageName
 import play.api.Application
-import play.api.db.DBApi
-import play.api.db.evolutions.{ClassLoaderEvolutionsReader, Evolutions}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits}
 
+@DoNotDiscover
 class SlickAtlassianHostRepositoryIt
     extends PlaySpec
-    with GuiceOneAppPerTest
+    with PostgresContainerTest
     with FutureAwaits
     with Eventually
-    with DefaultAwaitTimeout
-    with TestContainerForAll {
-
-  val postgresVersion = "15.5"
-
-  override val containerDef: PostgreSQLContainer.Def =
-    PostgreSQLContainer.Def(
-      DockerImageName.parse(s"postgres:$postgresVersion"),
-      databaseName = "intercom",
-      username = "test",
-      password = "test",
-    )
-
-  override def newAppForTest(td: TestData): Application = withContainers {
-    container =>
-      GuiceApplicationBuilder()
-        .configure(ContainerDbConfiguration.configuration(container))
-        .build()
-  }
-
-  def dbApi(implicit app: Application): DBApi =
-    Application.instanceCache[DBApi].apply(app)
-
-  def withEvolutions[T](block: => T): T =
-    Evolutions.withEvolutions(
-      dbApi.database("default"),
-      ClassLoaderEvolutionsReader.forPrefix("evolutions/")) {
-      block
-    }
+    with DefaultAwaitTimeout {
 
   def hostRepo(implicit app: Application): SlickAtlassianHostRepository =
     Application.instanceCache[SlickAtlassianHostRepository].apply(app)
@@ -96,20 +62,6 @@ class SlickAtlassianHostRepositoryIt
           } mustBe Some(host)
         }
       }
-
-      "find the inserted host by installation id" in new AtlassianHostFixture {
-        val connectOnForgeHost: DefaultAtlassianHost = if (host.installationId.isDefined) host else host.copy(installationId = Some("mock-installation-id"))
-        withEvolutions {
-          await {
-            hostRepo.save(connectOnForgeHost)
-          }
-
-          await {
-            hostRepo.findByInstallationId(connectOnForgeHost.installationId.get)
-          } mustBe Some(connectOnForgeHost)
-        }
-      }
-
     }
 
     "saving the same Atlassian hosts twice" should {

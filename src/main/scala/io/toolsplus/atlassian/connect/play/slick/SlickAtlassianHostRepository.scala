@@ -28,9 +28,6 @@ class SlickAtlassianHostRepository @Inject()(
   def findByClientKey(clientKey: ClientKey): Future[Option[AtlassianHost]] =
     db.run(hosts.filter(_.clientKey === clientKey).result.headOption)
 
-  def findByInstallationId(installationId: String): Future[Option[AtlassianHost]] =
-    db.run(hosts.filter(_.installationId === installationId).result.headOption)
-
   /** Saves the given Atlassian host by inserting it if it does not exist or
     * updating an existing record if it's already present.
     *
