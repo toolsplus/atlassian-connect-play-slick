@@ -23,5 +23,16 @@ CREATE INDEX uq_ac_host_base_url
 CREATE INDEX uq_ac_host_installation_id
     ON atlassian_host (installation_id);
 
+CREATE TABLE forge_installation
+(
+    installation_id VARCHAR PRIMARY KEY,
+    client_key      VARCHAR NOT NULL
+);
+CREATE UNIQUE INDEX uq_forge_installation_installation_id
+    ON forge_installation (installation_id);
+ALTER TABLE forge_installation
+    ADD CONSTRAINT fk_forge_installation_atlassian_host FOREIGN KEY (client_key) REFERENCES atlassian_host (client_key) ON UPDATE CASCADE ON DELETE CASCADE;
+
 # --- !Downs
+DROP TABLE forge_installation;
 DROP TABLE atlassian_host;

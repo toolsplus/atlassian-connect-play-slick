@@ -1,32 +1,12 @@
 package io.toolsplus.atlassian.connect.play.slick
 
-import io.toolsplus.atlassian.connect.play.api.models.DefaultAtlassianHost
 import io.toolsplus.atlassian.connect.play.slick.fixtures.AtlassianHostFixture
 import org.scalacheck.Gen._
-import org.scalatestplus.play.guice.GuiceOneAppPerTest
+import org.scalatest.DoNotDiscover
 import play.api.Application
-import play.api.db.DBApi
-import play.api.db.evolutions.{ClassLoaderEvolutionsReader, Evolutions}
-import play.api.inject.guice.GuiceApplicationBuilder
 
-class SlickAtlassianHostRepositorySpec
-    extends TestSpec
-    with GuiceOneAppPerTest {
-
-  override def fakeApplication(): Application = {
-    val config = TestData.configuration
-    GuiceApplicationBuilder(configuration = config).build()
-  }
-
-  def withEvolutions[T](block: => T): T =
-    Evolutions.withEvolutions(
-      dbApi.database("default"),
-      ClassLoaderEvolutionsReader.forPrefix("evolutions/")) {
-      block
-    }
-
-  def dbApi(implicit app: Application): DBApi =
-    Application.instanceCache[DBApi].apply(app)
+@DoNotDiscover
+class SlickAtlassianHostRepositorySpec extends TestSpec {
 
   def hostRepo(implicit app: Application): SlickAtlassianHostRepository =
     Application.instanceCache[SlickAtlassianHostRepository].apply(app)
@@ -77,18 +57,6 @@ class SlickAtlassianHostRepositorySpec
         }
       }
 
-      "find the inserted host by installation id" in new AtlassianHostFixture {
-        val connectOnForgeHost: DefaultAtlassianHost = if (host.installationId.isDefined) host else host.copy(installationId = Some("mock-installation-id"))
-        withEvolutions {
-          await {
-            hostRepo.save(connectOnForgeHost)
-          }
-
-          await {
-            hostRepo.findByInstallationId(connectOnForgeHost.installationId.get)
-          } mustBe Some(connectOnForgeHost)
-        }
-      }
     }
 
     "saving the same Atlassian hosts twice" should {
