@@ -2,14 +2,14 @@ import ReleaseTransformations._
 
 val commonSettings = Seq(
   organization := "io.toolsplus",
-  scalaVersion := "2.13.2"
+  scalaVersion := "2.13.14",
 )
 
-val integrationTestSettings = Defaults.itSettings ++ Seq(
-  IntegrationTest / fork := true,
-  IntegrationTest / testOptions += Tests.Argument(TestFrameworks.ScalaTest,
-    "-u",
-    "target/test-reports")
+val integrationTestSettings = Seq(
+  Test / fork := true,
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest,
+                                       "-u",
+                                       "target/test-reports")
 )
 
 lazy val publishSettings = Seq(
@@ -19,7 +19,7 @@ lazy val publishSettings = Seq(
   licenses := Seq(
     "Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
   publishMavenStyle := true,
-  publishArtifact in Test := false,
+  Test / publishArtifact := false,
   pomIncludeRepository := { _ =>
     false
   },
@@ -79,7 +79,15 @@ lazy val `atlassian-connect-play-slick` = project
   .in(file("."))
   .settings(libraryDependencies ++= Dependencies.root)
   .settings(commonSettings: _*)
-  .settings(integrationTestSettings: _*)
   .settings(publishSettings)
   .settings(moduleSettings(project))
-  .configs(IntegrationTest)
+
+lazy val `integration` = project
+  .in(file("integration"))
+  .settings(libraryDependencies ++= Dependencies.integration)
+  .settings(commonSettings: _*)
+  .settings(integrationTestSettings: _*)
+  .settings(
+    publish / skip := true,
+  )
+  .dependsOn(`atlassian-connect-play-slick`)
