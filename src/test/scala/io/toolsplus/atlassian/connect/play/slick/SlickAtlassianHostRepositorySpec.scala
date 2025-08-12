@@ -41,7 +41,7 @@ class SlickAtlassianHostRepositorySpec extends TestSpec {
 
           await {
             hostRepo.all()
-          } mustEqual Seq(host)
+          } must contain theSameElementsAs Seq(host)
         }
       }
 
@@ -73,7 +73,38 @@ class SlickAtlassianHostRepositorySpec extends TestSpec {
 
           await {
             hostRepo.all()
-          } mustBe Seq(host)
+          } must contain theSameElementsAs Seq(host)
+        }
+      }
+
+    }
+
+    "finding uninstalled hosts" should {
+
+      "return all uninstalled hosts" in new AtlassianHostFixture {
+        withEvolutions {
+          val uninstalledHost = host.copy(installed = false)
+          await {
+            hostRepo.save(uninstalledHost)
+          } mustBe uninstalledHost
+
+          val extraHosts =
+            listOfN(5, atlassianHostGen).retryUntil(_ => true).sample.get
+          for (host <- extraHosts) {
+            await {
+              hostRepo.save(host)
+            } mustBe host
+          }
+
+          val expectedUninstalledHosts =
+            (Seq(uninstalledHost) ++ extraHosts).filterNot(_.installed)
+
+          val uninstalledHosts = await {
+            hostRepo.findUninstalled()
+          }
+
+          expectedUninstalledHosts.size mustBe uninstalledHosts.size
+          expectedUninstalledHosts must contain theSameElementsAs uninstalledHosts
         }
       }
 
@@ -94,10 +125,68 @@ class SlickAtlassianHostRepositorySpec extends TestSpec {
 
           await {
             hostRepo.all()
-          } mustBe Seq(updated)
+          } must contain theSameElementsAs Seq(updated)
         }
       }
 
+    }
+
+    "deleting an Atlassian host" should {
+      "successfully delete the host" in new AtlassianHostFixture {
+        withEvolutions {
+          val uninstalledHost = host.copy(installed = false)
+          await {
+            hostRepo.save(uninstalledHost)
+          } mustBe uninstalledHost
+
+          await {
+            hostRepo.all()
+          } must contain theSameElementsAs Seq(uninstalledHost)
+
+          await {
+            hostRepo.delete(uninstalledHost.clientKey)
+          } mustBe 1
+
+          await {
+            hostRepo.all()
+          } mustBe Seq.empty
+        }
+      }
+
+      "not delete the host if it is installed" in new AtlassianHostFixture {
+        withEvolutions {
+          val installedHost = host.copy(installed = true)
+          await {
+            hostRepo.save(installedHost)
+          } mustBe installedHost
+
+          await {
+            hostRepo.all()
+          } must contain theSameElementsAs Seq(installedHost)
+
+          await {
+            hostRepo.delete(installedHost.clientKey)
+          } mustBe 0
+
+          await {
+            hostRepo.all()
+          } must contain theSameElementsAs Seq(installedHost)
+        }
+      }
+
+      "return 0 if the host to delete does not exist" in new AtlassianHostFixture {
+        await {
+          hostRepo.all()
+        } mustBe Seq.empty
+
+        await {
+          hostRepo.delete(host.clientKey)
+        } mustBe 0
+
+        await {
+          hostRepo.all()
+        } mustBe Seq.empty
+      }
     }
 
   }

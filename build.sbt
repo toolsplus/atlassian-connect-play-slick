@@ -1,8 +1,9 @@
-import ReleaseTransformations._
+import ReleaseTransformations.*
+import xerial.sbt.Sonatype.sonatypeCentralHost
 
 val commonSettings = Seq(
   organization := "io.toolsplus",
-  scalaVersion := "2.13.14",
+  scalaVersion := "2.13.16",
 )
 
 val integrationTestSettings = Seq(
@@ -23,13 +24,8 @@ lazy val publishSettings = Seq(
   pomIncludeRepository := { _ =>
     false
   },
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (isSnapshot.value)
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  },
+  ThisBuild / publishTo := sonatypePublishToBundle.value,
+  ThisBuild / sonatypeCredentialHost := sonatypeCentralHost,
   autoAPIMappings := true,
   scmInfo := Some(
     ScmInfo(
@@ -46,6 +42,7 @@ lazy val publishSettings = Seq(
 )
 
 lazy val noPublishSettings = Seq(
+  publish / skip := true,
   publish := {},
   publishLocal := {},
   publishArtifact := false,
@@ -62,9 +59,9 @@ releaseProcess := Seq[ReleaseStep](
   commitReleaseVersion,
   tagRelease,
   releaseStepCommand("publishSigned"),
+  releaseStepCommand("sonatypeBundleRelease"),
   setNextVersion,
   commitNextVersion,
-  releaseStepCommand("sonatypeReleaseAll"),
   pushChanges
 )
 
@@ -78,15 +75,15 @@ def moduleSettings(project: Project) = {
 lazy val `atlassian-connect-play-slick` = project
   .in(file("."))
   .settings(libraryDependencies ++= Dependencies.root)
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(publishSettings)
   .settings(moduleSettings(project))
 
 lazy val `integration` = project
   .in(file("integration"))
   .settings(libraryDependencies ++= Dependencies.integration)
-  .settings(commonSettings: _*)
-  .settings(integrationTestSettings: _*)
+  .settings(commonSettings)
+  .settings(integrationTestSettings)
   .settings(
     publish / skip := true,
   )

@@ -15,7 +15,8 @@ CREATE TABLE atlassian_host
     entitlement_id                      VARCHAR,
     entitlement_number                  VARCHAR,
     installed                           BOOLEAN             NOT NULL,
-    ttl                                 TIMESTAMP
+-- https://scala-slick.org/doc/3.3.3/upgrade.html#slick.jdbc.h2profile
+    ttl                                 TIMESTAMP(9) WITH TIME ZONE
 );
 CREATE UNIQUE INDEX uq_ac_host_client_key
     ON atlassian_host (client_key);

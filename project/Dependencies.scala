@@ -1,4 +1,4 @@
-import sbt._
+import sbt.*
 
 object Dependencies {
   val root = Seq(
@@ -8,7 +8,8 @@ object Dependencies {
     Library.scalaTest % "test",
     Library.scalaCheck % "test",
     Library.scalaTestPlusScalaCheck % "test",
-    Library.h2 % "test",
+    Library.scalaCheckDateTime % "test",
+    Library.h2 % "test"
   )
 
   val integration = Seq(
@@ -19,29 +20,39 @@ object Dependencies {
     Library.testcontainersScala % "test",
     Library.testcontainersScalaPostgresql % "test",
     Library.scalaTestPlusScalaCheck % "test",
+    Library.scalaCheckDateTime % "test"
   )
 }
 
 object Version {
-  val atlassianConnectPlay = "0.8.0"
-  val playSlick = "6.1.0"
-  val scalaTestPlusPlay = "7.0.1"
-  val scalaCheck = "1.18.0"
+  val atlassianConnectPlay = "0.9.0"
+  val playSlick = "6.2.0"
+  val scalaTestPlusPlay = "7.0.2"
+  val scalaCheck = "1.18.1"
   val scalaTestPlusScalaCheck = "3.2.18.0"
-  val h2 = "1.4.197"
-  val postgres = "42.6.0"
-  val testcontainersScala = "0.41.3"
+  val scalaCheckDateTime = "0.7.0"
+  val h2 = "2.3.232"
+  val postgres = "42.7.7"
+  val testcontainersScala = "0.43.0"
 }
 
 object Library {
-  val atlassianConnectApi = "io.toolsplus" %% "atlassian-connect-play-api" % Version.atlassianConnectPlay
+  val atlassianConnectApi =
+    "io.toolsplus" %% "atlassian-connect-play-api" % Version.atlassianConnectPlay
   val playSlick = "org.playframework" %% "play-slick" % Version.playSlick
-  val playSlickEvolutions = "org.playframework" %% "play-slick-evolutions" % Version.playSlick
-  val scalaTest = "org.scalatestplus.play" %% "scalatestplus-play" % Version.scalaTestPlusPlay
+  val playSlickEvolutions =
+    "org.playframework" %% "play-slick-evolutions" % Version.playSlick
+  val scalaTest =
+    "org.scalatestplus.play" %% "scalatestplus-play" % Version.scalaTestPlusPlay
   val scalaCheck = "org.scalacheck" %% "scalacheck" % Version.scalaCheck
-  val scalaTestPlusScalaCheck = "org.scalatestplus" %% "scalacheck-1-17" % Version.scalaTestPlusScalaCheck
+  val scalaTestPlusScalaCheck =
+    "org.scalatestplus" %% "scalacheck-1-17" % Version.scalaTestPlusScalaCheck
+  val scalaCheckDateTime =
+    "com.47deg" %% "scalacheck-toolbox-datetime" % Version.scalaCheckDateTime
   val h2 = "com.h2database" % "h2" % Version.h2
   val postgres = "org.postgresql" % "postgresql" % Version.postgres
-  val testcontainersScala = "com.dimafeng" %% "testcontainers-scala-scalatest" % Version.testcontainersScala
-  val testcontainersScalaPostgresql = "com.dimafeng" %% "testcontainers-scala-postgresql" % Version.testcontainersScala
+  val testcontainersScala =
+    "com.dimafeng" %% "testcontainers-scala-scalatest" % Version.testcontainersScala
+  val testcontainersScalaPostgresql =
+    "com.dimafeng" %% "testcontainers-scala-postgresql" % Version.testcontainersScala
 }

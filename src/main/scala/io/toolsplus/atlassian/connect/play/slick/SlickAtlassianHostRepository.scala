@@ -11,13 +11,14 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 import slick.sql.SqlProfile.ColumnOption.{NotNull, SqlType}
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SlickAtlassianHostRepository @Inject()(
-    protected val dbConfigProvider: DatabaseConfigProvider)
-    extends AtlassianHostRepository
+class SlickAtlassianHostRepository @Inject() (
+    protected val dbConfigProvider: DatabaseConfigProvider
+) extends AtlassianHostRepository
     with AtlassianHostTable
     with HasDatabaseConfigProvider[JdbcProfile] {
 
@@ -28,18 +29,31 @@ class SlickAtlassianHostRepository @Inject()(
   def findByClientKey(clientKey: ClientKey): Future[Option[AtlassianHost]] =
     db.run(hosts.filter(_.clientKey === clientKey).result.headOption)
 
+  def findUninstalled(): Future[Seq[AtlassianHost]] =
+    db.run(hosts.filter(_.installed === false).result)
+
   /** Saves the given Atlassian host by inserting it if it does not exist or
     * updating an existing record if it's already present.
     *
     * Note that Slick returns None if the record is updated and Some if it's
     * inserted. Override this behaviour to always return a host.
     *
-    * @param host Atlassian Connect host to store.
-    * @return Saved Atlassian Connect host.
+    * @param host
+    *   Atlassian Connect host to store.
+    * @return
+    *   Saved Atlassian Connect host.
     */
   def save(host: AtlassianHost): Future[AtlassianHost] = {
     db.run(hosts.insertOrUpdate(host)).map(_ => host)
   }
+
+  def delete(clientKey: ClientKey): Future[Int] =
+    db.run(
+      hosts
+        .filter(_.clientKey === clientKey)
+        .filter(_.installed === false)
+        .delete
+    )
 }
 
 private[slick] trait AtlassianHostTable {
@@ -63,7 +77,8 @@ private[slick] trait AtlassianHostTable {
     val displayUrlServicedeskHelpCenter = column[String](
       "display_url_servicedesk_help_center",
       NotNull,
-      SqlType("VARCHAR(512)"))
+      SqlType("VARCHAR(512)")
+    )
     val productType = column[String]("product_type", NotNull)
     val description = column[String]("description", NotNull)
     val serviceEntitlementNumber =
@@ -73,58 +88,69 @@ private[slick] trait AtlassianHostTable {
     val entitlementNumber =
       column[Option[String]]("entitlement_number")
     val installed = column[Boolean]("installed", NotNull)
+    val ttl = column[Option[Instant]]("ttl")
 
     val clientKeyIndex =
       index("uq_ac_host_client_key", clientKey, unique = true)
     val baseUrlIndex = index("uq_ac_host_base_url", baseUrl)
 
     def * =
-      (clientKey,
-       key,
-       oauthClientId,
-       installationId,
-       sharedSecret,
-       baseUrl,
-       displayUrl,
-       displayUrlServicedeskHelpCenter,
-       productType,
-       description,
-       serviceEntitlementNumber,
-       entitlementId,
-       entitlementNumber,
-       installed) <> (toHost.tupled, fromHost)
+      (
+        clientKey,
+        key,
+        oauthClientId,
+        installationId,
+        sharedSecret,
+        baseUrl,
+        displayUrl,
+        displayUrlServicedeskHelpCenter,
+        productType,
+        description,
+        serviceEntitlementNumber,
+        entitlementId,
+        entitlementNumber,
+        installed,
+        ttl
+      ) <> (toHost.tupled, fromHost)
 
-    private def toHost: (ClientKey,
-                         String,
-                         Option[String],
-                         Option[String],
-                         String,
-                         String,
-                         String,
-                         String,
-                         String,
-                         String,
-                         Option[String],
-                         Option[String],
-                         Option[String],
-                         Boolean) => AtlassianHost = DefaultAtlassianHost.apply
+    private def toHost: (
+        ClientKey,
+        String,
+        Option[String],
+        Option[String],
+        String,
+        String,
+        String,
+        String,
+        String,
+        String,
+        Option[String],
+        Option[String],
+        Option[String],
+        Boolean,
+        Option[Instant]
+    ) => AtlassianHost = DefaultAtlassianHost.apply
   }
 
   private def fromHost: AtlassianHost => Option[
-    (ClientKey,
-     String,
-     Option[String],
-     Option[String],
-     String,
-     String,
-     String,
-     String,
-     String,
-     String,
-     Option[String],
-     Option[String],
-     Option[String],
-     Boolean)] = { host: AtlassianHost =>
+    (
+        ClientKey,
+        String,
+        Option[String],
+        Option[String],
+        String,
+        String,
+        String,
+        String,
+        String,
+        String,
+        Option[String],
+        Option[String],
+        Option[String],
+        Boolean,
+        Option[Instant]
+    )
+  ] = { host: AtlassianHost =>
     DefaultAtlassianHost.unapply(
       DefaultAtlassianHost(
         host.clientKey,
@@ -140,8 +166,10 @@ private[slick] trait AtlassianHostTable {
         host.serviceEntitlementNumber,
         host.entitlementId,
         host.entitlementNumber,
-        host.installed
-      ))
+        host.installed,
+        host.ttl
+      )
+    )
   }
 
 }

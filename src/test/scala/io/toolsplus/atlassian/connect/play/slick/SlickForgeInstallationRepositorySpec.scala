@@ -41,8 +41,9 @@ class SlickForgeInstallationRepositorySpec extends TestSpec {
   def hostRepo(implicit app: Application): SlickAtlassianHostRepository =
     Application.instanceCache[SlickAtlassianHostRepository].apply(app)
 
-  def forgeInstallationRepo(
-      implicit app: Application): SlickForgeInstallationRepository =
+  def forgeInstallationRepo(implicit
+      app: Application
+  ): SlickForgeInstallationRepository =
     Application.instanceCache[SlickForgeInstallationRepository].apply(app)
 
   "Using a Slick Forge installation repository" when {
@@ -97,7 +98,8 @@ class SlickForgeInstallationRepositorySpec extends TestSpec {
 
           await {
             forgeInstallationRepo.findByInstallationId(
-              fakeInstallationHostA.installationId)
+              fakeInstallationHostA.installationId
+            )
           } mustBe Some(fakeInstallationHostA)
         }
       }
@@ -111,7 +113,8 @@ class SlickForgeInstallationRepositorySpec extends TestSpec {
 
           await {
             forgeInstallationRepo.findByClientKey(
-              fakeInstallationHostA.clientKey)
+              fakeInstallationHostA.clientKey
+            )
           } mustBe Seq(fakeInstallationHostA)
         }
       }
@@ -125,12 +128,13 @@ class SlickForgeInstallationRepositorySpec extends TestSpec {
           await(hostRepo.save(hostB))
           await {
             Future.sequence(
-              fakeInstallationsHostB.map(forgeInstallationRepo.save))
+              fakeInstallationsHostB.map(forgeInstallationRepo.save)
+            )
           }
 
           await {
             forgeInstallationRepo.all()
-          } mustBe fakeInstallationsHostB
+          } must contain theSameElementsAs fakeInstallationsHostB
         }
       }
 
@@ -159,10 +163,9 @@ class SlickForgeInstallationRepositorySpec extends TestSpec {
 
     "updating a Forge installation" should {
 
-      /**
-        * This scenario appears if there is site import (migration)
-        * from on Atlassian instance to another. The installation id
-        * remains the same but the client key changes.
+      /** This scenario appears if there is site import (migration) from on
+        * Atlassian instance to another. The installation id remains the same
+        * but the client key changes.
         */
       "successfully store the updated version" in {
         withEvolutions {
@@ -194,7 +197,8 @@ class SlickForgeInstallationRepositorySpec extends TestSpec {
           await(hostRepo.save(hostB))
           await {
             Future.sequence(
-              fakeInstallationsHostB.map(forgeInstallationRepo.save))
+              fakeInstallationsHostB.map(forgeInstallationRepo.save)
+            )
           }
 
           await {
@@ -203,11 +207,14 @@ class SlickForgeInstallationRepositorySpec extends TestSpec {
 
           await {
             forgeInstallationRepo.all()
-          }.size mustBe (fakeInstallationsHostB ++ Seq(fakeInstallationHostA)).size
+          }.size mustBe (fakeInstallationsHostB ++ Seq(
+            fakeInstallationHostA
+          )).size
 
           await {
             forgeInstallationRepo.deleteByClientKey(
-              fakeInstallationsHostB.head.clientKey)
+              fakeInstallationsHostB.head.clientKey
+            )
           } mustBe fakeInstallationsHostB.size
 
           await {
