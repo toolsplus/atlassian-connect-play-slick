@@ -14,14 +14,14 @@ trait PostgresContainerTest
     extends GuiceOneAppPerTest
     with TestContainerForAll { self: TestSuite =>
 
-  val postgresVersion = "15.5"
+  val postgresVersion = "15.12"
 
   override val containerDef: PostgreSQLContainer.Def =
     PostgreSQLContainer.Def(
       DockerImageName.parse(s"postgres:$postgresVersion"),
       databaseName = "intercom",
       username = "test",
-      password = "test",
+      password = "test"
     )
 
   override def newAppForTest(td: TestData): Application = withContainers {
@@ -37,7 +37,8 @@ trait PostgresContainerTest
   def withEvolutions[T](block: => T): T =
     Evolutions.withEvolutions(
       dbApi.database("default"),
-      ClassLoaderEvolutionsReader.forPrefix("evolutions/")) {
+      ClassLoaderEvolutionsReader.forPrefix("evolutions/")
+    ) {
       block
     }
 

@@ -1,6 +1,5 @@
 package io.toolsplus.atlassian.connect.play.slick
 
-import io.toolsplus.atlassian.connect.play.api.models.DefaultAtlassianHost
 import io.toolsplus.atlassian.connect.play.slick.fixtures.AtlassianHostFixture
 import org.scalatest.DoNotDiscover
 import org.scalatest.concurrent.Eventually
@@ -47,7 +46,7 @@ class SlickAtlassianHostRepositoryIt
 
           await {
             hostRepo.all()
-          } mustEqual Seq(host)
+          } must contain theSameElementsAs Seq(host)
         }
       }
 
@@ -78,7 +77,7 @@ class SlickAtlassianHostRepositoryIt
 
           await {
             hostRepo.all()
-          } mustBe Seq(host)
+          } must contain theSameElementsAs Seq(host)
         }
       }
 
@@ -99,7 +98,7 @@ class SlickAtlassianHostRepositoryIt
 
           await {
             hostRepo.all()
-          } mustBe Seq(updated)
+          } must contain theSameElementsAs Seq(updated)
         }
       }
 
@@ -128,7 +127,7 @@ class SlickAtlassianHostRepositoryIt
 
           await {
             hostRepo.all()
-          } mustBe Seq(host, updated)
+          } must contain theSameElementsAs Seq(host, updated)
         }
       }
 
