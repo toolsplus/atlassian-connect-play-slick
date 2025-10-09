@@ -35,6 +35,18 @@ CREATE UNIQUE INDEX uq_forge_installation_installation_id
 ALTER TABLE forge_installation
     ADD CONSTRAINT fk_forge_installation_atlassian_host FOREIGN KEY (client_key) REFERENCES atlassian_host (client_key) ON UPDATE CASCADE ON DELETE CASCADE;
 
+CREATE TABLE forge_system_access_token
+(
+    installation_id VARCHAR PRIMARY KEY,
+    api_base_url    VARCHAR NOT NULL,
+    access_token    VARCHAR NOT NULL,
+-- https://scala-slick.org/doc/3.3.3/upgrade.html#slick.jdbc.h2profile
+    expiration_time TIMESTAMP (9) WITH TIME ZONE NOT NULL
+);
+CREATE INDEX forge_system_access_token_expiration_time
+    ON forge_system_access_token (expiration_time);
+
 # --- !Downs
+DROP TABLE forge_system_access_token;
 DROP TABLE forge_installation;
 DROP TABLE atlassian_host;

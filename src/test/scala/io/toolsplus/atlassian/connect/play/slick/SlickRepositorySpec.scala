@@ -12,4 +12,5 @@ import org.scalatest.Suites
   */
 class SlickRepositorySpec
     extends Suites(new SlickAtlassianHostRepositorySpec,
-                   new SlickForgeInstallationRepositorySpec)
+                   new SlickForgeInstallationRepositorySpec,
+                   new SlickForgeSystemAccessTokenRepositorySpec)

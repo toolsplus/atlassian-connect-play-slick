@@ -1,9 +1,6 @@
 package io.toolsplus.atlassian.connect.play.slick
 
-import io.toolsplus.atlassian.connect.play.api.repositories.{
-  AtlassianHostRepository,
-  ForgeInstallationRepository
-}
+import io.toolsplus.atlassian.connect.play.api.repositories.{AtlassianHostRepository, ForgeInstallationRepository, ForgeSystemAccessTokenRepository}
 import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -50,6 +47,20 @@ class SlickModuleSpec extends PlaySpec {
         val forgeInstallationRepository2 =
           injector.instanceOf[ForgeInstallationRepository]
         forgeInstallationRepository1 mustEqual forgeInstallationRepository2
+      }
+
+      "bind ForgeSystemAccessTokenRepository to SlickForgeSystemAccessTokenRepository" in {
+        val forgeSystemAccessTokenRepository =
+          injector.instanceOf[ForgeSystemAccessTokenRepository]
+        forgeSystemAccessTokenRepository mustBe a[SlickForgeSystemAccessTokenRepository]
+      }
+
+      "bind ForgeSystemAccessTokenRepository as a singleton" in {
+        val forgeSystemAccessTokenRepository1 =
+          injector.instanceOf[ForgeSystemAccessTokenRepository]
+        val forgeSystemAccessTokenRepository2 =
+          injector.instanceOf[ForgeSystemAccessTokenRepository]
+        forgeSystemAccessTokenRepository1 mustEqual forgeSystemAccessTokenRepository2
       }
 
     }

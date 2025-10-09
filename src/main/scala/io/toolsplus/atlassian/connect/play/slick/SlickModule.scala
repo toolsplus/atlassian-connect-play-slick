@@ -3,7 +3,8 @@ package io.toolsplus.atlassian.connect.play.slick
 import javax.inject.Singleton
 import io.toolsplus.atlassian.connect.play.api.repositories.{
   AtlassianHostRepository,
-  ForgeInstallationRepository
+  ForgeInstallationRepository,
+  ForgeSystemAccessTokenRepository
 }
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject._
@@ -15,7 +16,9 @@ final class SlickModule extends Module {
                configuration: Configuration): Seq[Binding[_]] = {
     Seq(
       bind[AtlassianHostRepository].to[SlickAtlassianHostRepository],
-      bind[ForgeInstallationRepository].to[SlickForgeInstallationRepository]
+      bind[ForgeInstallationRepository].to[SlickForgeInstallationRepository],
+      bind[ForgeSystemAccessTokenRepository]
+        .to[SlickForgeSystemAccessTokenRepository]
     )
   }
 }
@@ -29,4 +32,7 @@ trait SlickComponents {
 
   lazy val forgeInstallationRepository: ForgeInstallationRepository =
     new SlickForgeInstallationRepository(dbConfigProvider)
+
+  lazy val forgeSystemAccessTokenRepository: ForgeSystemAccessTokenRepository =
+    new SlickForgeSystemAccessTokenRepository(dbConfigProvider)
 }
