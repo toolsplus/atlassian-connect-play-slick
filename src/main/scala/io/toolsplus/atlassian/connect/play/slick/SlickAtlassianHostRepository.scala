@@ -150,25 +150,23 @@ private[slick] trait AtlassianHostTable {
         Boolean,
         Option[Instant]
     )
-  ] = { host: AtlassianHost =>
-    DefaultAtlassianHost.unapply(
-      DefaultAtlassianHost(
-        host.clientKey,
-        host.key,
-        host.oauthClientId,
-        host.installationId,
-        host.sharedSecret,
-        host.baseUrl,
-        host.displayUrl,
-        host.displayUrlServicedeskHelpCenter,
-        host.productType,
-        host.description,
-        host.serviceEntitlementNumber,
-        host.entitlementId,
-        host.entitlementNumber,
-        host.installed,
-        host.ttl
-      )
+  ] = { (host: AtlassianHost) =>
+    Some(
+      host.clientKey,
+      host.key,
+      host.oauthClientId,
+      host.installationId,
+      host.sharedSecret,
+      host.baseUrl,
+      host.displayUrl,
+      host.displayUrlServicedeskHelpCenter,
+      host.productType,
+      host.description,
+      host.serviceEntitlementNumber,
+      host.entitlementId,
+      host.entitlementNumber,
+      host.installed,
+      host.ttl
     )
   }
 

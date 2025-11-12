@@ -15,9 +15,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SlickForgeInstallationRepository @Inject()(
-    protected val dbConfigProvider: DatabaseConfigProvider)
-    extends ForgeInstallationRepository
+class SlickForgeInstallationRepository @Inject() (
+    protected val dbConfigProvider: DatabaseConfigProvider
+) extends ForgeInstallationRepository
     with ForgeInstallationTable
     with HasDatabaseConfigProvider[JdbcProfile] {
 
@@ -26,12 +26,14 @@ class SlickForgeInstallationRepository @Inject()(
   def all(): Future[Seq[ForgeInstallation]] = db.run(installations.result)
 
   def findByInstallationId(
-      installationId: String): Future[Option[ForgeInstallation]] =
+      installationId: String
+  ): Future[Option[ForgeInstallation]] =
     db.run(
       installations
         .filter(_.installationId === installationId)
         .result
-        .headOption)
+        .headOption
+    )
 
   def findByClientKey(clientKey: ClientKey): Future[Seq[ForgeInstallation]] =
     db.run(installations.filter(_.clientKey === clientKey).result)
@@ -42,17 +44,20 @@ class SlickForgeInstallationRepository @Inject()(
     * Note that Slick returns None if the record is updated and Some if it's
     * inserted. Override this behaviour to always return an installation.
     *
-    * @param installation Forge installation to store.
-    * @return Saved Forge installation.
+    * @param installation
+    *   Forge installation to store.
+    * @return
+    *   Saved Forge installation.
     */
   def save(installation: ForgeInstallation): Future[ForgeInstallation] =
     db.run(installations.insertOrUpdate(installation)).map(_ => installation)
 
-  /**
-    * Delete all Forge installations associated with a specific clientKey.
+  /** Delete all Forge installations associated with a specific clientKey.
     *
-    * @param clientKey Client key of the Atlassian Connect host
-    * @return Number of deleted Forge installations
+    * @param clientKey
+    *   Client key of the Atlassian Connect host
+    * @return
+    *   Number of deleted Forge installations
     */
   def deleteByClientKey(clientKey: ClientKey): Future[Int] =
     db.run(installations.filter(_.clientKey === clientKey).delete)
@@ -72,9 +77,11 @@ private[slick] trait ForgeInstallationTable {
     val clientKey = column[ClientKey]("client_key", NotNull)
 
     val installationIdIndex =
-      index("uq_forge_installation_installation_id",
-            installationId,
-            unique = true)
+      index(
+        "uq_forge_installation_installation_id",
+        installationId,
+        unique = true
+      )
 
     def * =
       (installationId, clientKey) <> (toInstallation.tupled, fromInstallation)
@@ -84,13 +91,9 @@ private[slick] trait ForgeInstallationTable {
   }
 
   private def fromInstallation
-    : ForgeInstallation => Option[(String, ClientKey)] = {
-    installation: ForgeInstallation =>
-      DefaultForgeInstallation.unapply(
-        DefaultForgeInstallation(
-          installation.installationId,
-          installation.clientKey
-        ))
+      : ForgeInstallation => Option[(String, ClientKey)] = {
+    (installation: ForgeInstallation) =>
+      Some(installation.installationId, installation.clientKey)
   }
 
 }

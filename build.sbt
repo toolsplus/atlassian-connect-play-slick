@@ -3,22 +3,26 @@ import xerial.sbt.Sonatype.sonatypeCentralHost
 
 val commonSettings = Seq(
   organization := "io.toolsplus",
-  scalaVersion := "2.13.16",
+  scalaVersion := "3.3.6"
 )
 
 val integrationTestSettings = Seq(
   Test / fork := true,
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest,
-                                       "-u",
-                                       "target/test-reports")
+  Test / testOptions += Tests.Argument(
+    TestFrameworks.ScalaTest,
+    "-u",
+    "target/test-reports"
+  )
 )
 
 lazy val publishSettings = Seq(
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   homepage := Some(
-    url("https://github.com/toolsplus/atlassian-connect-play-slick")),
+    url("https://github.com/toolsplus/atlassian-connect-play-slick")
+  ),
   licenses := Seq(
-    "Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
+    "Apache 2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")
+  ),
   publishMavenStyle := true,
   Test / publishArtifact := false,
   pomIncludeRepository := { _ =>
@@ -34,10 +38,12 @@ lazy val publishSettings = Seq(
     )
   ),
   developers := List(
-    Developer("tbinna",
-              "Tobias Binna",
-              "tobias.binna@toolsplus.io",
-              url("https://twitter.com/tbinna"))
+    Developer(
+      "tbinna",
+      "Tobias Binna",
+      "tobias.binna@toolsplus.io",
+      url("https://twitter.com/tbinna")
+    )
   )
 )
 
@@ -47,7 +53,8 @@ lazy val noPublishSettings = Seq(
   publishLocal := {},
   publishArtifact := false,
   publishTo := Some(
-    Resolver.file("Unused transient repository", file("target/dummyrepo")))
+    Resolver.file("Unused transient repository", file("target/dummyrepo"))
+  )
 )
 
 releaseProcess := Seq[ReleaseStep](
@@ -85,6 +92,6 @@ lazy val `integration` = project
   .settings(commonSettings)
   .settings(integrationTestSettings)
   .settings(
-    publish / skip := true,
+    publish / skip := true
   )
   .dependsOn(`atlassian-connect-play-slick`)
