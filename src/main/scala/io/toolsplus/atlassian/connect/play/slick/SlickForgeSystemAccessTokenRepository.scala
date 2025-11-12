@@ -15,9 +15,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 @Singleton
-class SlickForgeSystemAccessTokenRepository @Inject()(
-    protected val dbConfigProvider: DatabaseConfigProvider)
-    extends ForgeSystemAccessTokenRepository
+class SlickForgeSystemAccessTokenRepository @Inject() (
+    protected val dbConfigProvider: DatabaseConfigProvider
+) extends ForgeSystemAccessTokenRepository
     with ForgeSystemAccessTokenTable
     with HasDatabaseConfigProvider[JdbcProfile] {
 
@@ -27,11 +27,13 @@ class SlickForgeSystemAccessTokenRepository @Inject()(
     db.run(systemAccessTokens.result)
 
   override def save(
-      token: ForgeSystemAccessToken): Future[ForgeSystemAccessToken] =
+      token: ForgeSystemAccessToken
+  ): Future[ForgeSystemAccessToken] =
     db.run(systemAccessTokens.insertOrUpdate(token)).map(_ => token)
 
   override def findByInstallationId(
-      installationId: String): Future[Option[ForgeSystemAccessToken]] =
+      installationId: String
+  ): Future[Option[ForgeSystemAccessToken]] =
     db.run(
       systemAccessTokens
         .filter(t => t.installationId === installationId)
@@ -41,17 +43,20 @@ class SlickForgeSystemAccessTokenRepository @Inject()(
 
   override def findByInstallationIdAndExpirationTimeAfter(
       installationId: String,
-      expirationTime: Instant): Future[Option[ForgeSystemAccessToken]] =
+      expirationTime: Instant
+  ): Future[Option[ForgeSystemAccessToken]] =
     db.run(
       systemAccessTokens
         .filter(t =>
-          t.installationId === installationId && t.expirationTime >= expirationTime)
+          t.installationId === installationId && t.expirationTime >= expirationTime
+        )
         .result
         .headOption
     )
 
   override def deleteAllByExpirationTimeBefore(
-      expirationTime: Instant): Future[Int] =
+      expirationTime: Instant
+  ): Future[Int] =
     db.run(systemAccessTokens.filter(_.expirationTime < expirationTime).delete)
 }
 
@@ -74,23 +79,25 @@ private[slick] trait ForgeSystemAccessTokenTable {
       index("forge_system_access_token_expiration_time", expirationTime)
 
     def * =
-      (installationId, apiBaseUrl, accessToken, expirationTime) <> (toSystemAccessToken.tupled, fromSystemAccessToken)
+      (installationId, apiBaseUrl, accessToken, expirationTime) <> (
+        toSystemAccessToken.tupled,
+        fromSystemAccessToken
+      )
 
     private def toSystemAccessToken
-      : (String, String, String, Instant) => ForgeSystemAccessToken =
+        : (String, String, String, Instant) => ForgeSystemAccessToken =
       DefaultForgeSystemAccessToken.apply
   }
 
   private def fromSystemAccessToken
-    : ForgeSystemAccessToken => Option[(String, String, String, Instant)] = {
-    systemAccessToken: ForgeSystemAccessToken =>
-      DefaultForgeSystemAccessToken.unapply(
-        DefaultForgeSystemAccessToken(
-          systemAccessToken.installationId,
-          systemAccessToken.apiBaseUrl,
-          systemAccessToken.accessToken,
-          systemAccessToken.expirationTime
-        ))
+      : ForgeSystemAccessToken => Option[(String, String, String, Instant)] = {
+    (systemAccessToken: ForgeSystemAccessToken) =>
+      Some(
+        systemAccessToken.installationId,
+        systemAccessToken.apiBaseUrl,
+        systemAccessToken.accessToken,
+        systemAccessToken.expirationTime
+      )
   }
 
 }

@@ -2,15 +2,15 @@
 
 [![Continuous integration](https://github.com/toolsplus/atlassian-connect-play-slick/actions/workflows/ci.yml/badge.svg)](https://github.com/toolsplus/atlassian-connect-play-slick/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/toolsplus/atlassian-connect-play-slick/branch/master/graph/badge.svg)](https://codecov.io/gh/toolsplus/atlassian-connect-play-slick)
-[![Maven Central](https://img.shields.io/maven-central/v/io.toolsplus/atlassian-connect-play-slick_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/io.toolsplus/atlassian-connect-play-slick_2.13)
+[![Maven Central](https://img.shields.io/maven-central/v/io.toolsplus/atlassian-connect-play-slick_3.svg)](https://maven-badges.herokuapp.com/maven-central/io.toolsplus/atlassian-connect-play-slick_3)
 
 Atlassian Connect Play Slick is a Play module providing Slick 
 implementation for data repositories defined in [Atlassian Connect Play](atlassian-connect-play).
 
 ## Quick start
 
-atlassian-connect-play-slick is published to Maven Central for Scala 2.13 and 
-Play 2.8.x, so you can just add the following to your build:
+atlassian-connect-play-slick is published to Maven Central for Scala 3 and 
+Play 3. Add the following dependency to your build:
 
     libraryDependencies += "io.toolsplus" %% "atlassian-connect-play-slick" % "x.x.x"
 
