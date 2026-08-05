@@ -25,15 +25,15 @@ object Dependencies {
 }
 
 object Version {
-  val atlassianConnectPlay = "0.12.1"
+  val atlassianConnectPlay = "0.13.0"
   val playSlick = "6.2.0"
   val scalaTestPlusPlay = "7.0.2"
   val scalaCheck = "1.18.1"
   val scalaTestPlusScalaCheck = "3.2.18.0"
   val scalaCheckDateTime = "0.7.0"
   val h2 = "2.3.232"
-  val postgres = "42.7.7"
-  val testcontainersScala = "0.43.0"
+  val postgres = "42.7.13"
+  val testcontainersScala = "0.44.1"
 }
 
 object Library {
